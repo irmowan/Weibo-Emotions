@@ -19,7 +19,7 @@ def count(line):
     c = [0, 0]
 
     # bug here, but does not affect this program
-    tweet = "".join(line.split()[5: -4]) 
+    tweet = "".join(line.split()[5: -5]) 
 
     for keyword, emotion in emotions.iteritems():
         if keyword in tweet:
