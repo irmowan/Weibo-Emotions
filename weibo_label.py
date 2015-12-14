@@ -16,7 +16,7 @@ for line in file_emotions:
 
 file_emotions.close()
 
-# Read line by line to
+# Read line by line to analyse
 file_tweets = codecs.open('data/tweets_sample.txt', 'r', 'utf-8')
 cnt = 0
 for line in file_tweets:
@@ -29,6 +29,7 @@ for line in file_tweets:
         weibo += fields[i]
     pos = 0
     nag = 0
+    # match the emotions
     for key in dic.keys():
         if key in weibo:
             if dic[key] == 1:
@@ -43,7 +44,6 @@ for line in file_tweets:
     if pos > 0 and nag > 0:
         print("Ambivalent, but more ", "positive" if pos > nag else "nagitive")
     cnt += 1
+file_tweets.close()
 
-if __name__ == "__main__":
-    print("Count of weibo: ", cnt)
-    file_tweets.close()
+print("Count of weibo: ", cnt)
