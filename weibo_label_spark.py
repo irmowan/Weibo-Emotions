@@ -17,7 +17,9 @@ def load_emotions(path):
 
 def count(line):
     c = [0, 0]
-    tweet = "".join(line.split()[5: -4])
+
+    # bug here, but does not affect this program
+    tweet = "".join(line.split()[5: -4]) 
 
     for keyword, emotion in emotions.iteritems():
         if keyword in tweet:
@@ -25,7 +27,7 @@ def count(line):
 
     emotion = (c[0] and not c[1] and "Positive") or (not c[0] and c[1] and "Negative") or "Ambivalent"
 
-    return (tweet, c[0], c[1], emotion)
+    return "%s %d %d %s" % (tweet, c[0], c[1], emotion)
 
 def analyse(path, emotions, outputPath):
     lines = sc.textFile(sys.argv[2], use_unicode=False)
@@ -33,16 +35,7 @@ def analyse(path, emotions, outputPath):
     results = lines.map(count)
 
     # chinese words in the output files are shown as \x343
-    #results.saveAsTextFile(outputPath)
-
-    results = results.collect()
-    
-    with open('/tmp/result', 'w') as f:
-        for r in results:
-            f.write("%s %d %d %s\n" % r)
-
-    os.system("hadoop fs -cp file:///tmp/result_naive %s" % outputPath)
-    os.system("rm /tmp/result_naive")
+    results.saveAsTextFile(outputPath)
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
