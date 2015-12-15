@@ -18,13 +18,15 @@ def count(line):
 
     fields = line.split('\t')
 
+    fields[-2] = fields[-2] or -2
+
     tweet = "".join(fields[5: -6]) 
 
     for keyword, emotion in emotions.iteritems():
         if keyword in tweet:
             c[emotion] += 1
     
-    return " ".join(fields[0: 5] + fields[-6:] + fields[5: -6] + [str(c[0]), str(c[1])])
+    return " ".join(fields[0: 5] + fields[-6: -1] + fields[5: -6] + [str(c[0]), str(c[1])])
 
 def analyse(path, emotions, outputPath):
     lines = sc.textFile(sys.argv[2], use_unicode=False)
