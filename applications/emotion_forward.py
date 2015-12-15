@@ -1,12 +1,13 @@
 from __future__ import print_function
 
+import sys
+from operator import add
 from pyspark import SparkContext
 
-def predict(line):
-    fields = line.split()
+def forward_predict(line):
+    fields = line.split('\t')
 
-    tweet_id = fields[0]
-    text = fields[9]
+    text = fields[10]
     npos = int(fields[-2])
     nneg = int(fields[-1])
 
@@ -15,17 +16,19 @@ def predict(line):
     return (emotion, 1 if '//' in text else 0)
 
 def analyse(path, outputPath):
-    lines = sc.textFile(sys.argv[1], use_unicode=False)
+    lines = sc.textFile(path, use_unicode=False)
 
-    results = lines.map(predict).reduceByKey(add)
+    results = lines.map(forward_predict).reduceByKey(add)
 
     results.saveAsTextFile(outputPath)
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: emotion_forward naive-data result–path")
+        print("Usage: emotion_forward naive_date result-path")
         exit(-1)
 
     sc = SparkContext(appName = "emotion_forward")
 
     analyse(sys.argv[1], sys.argv[2])
+    
+    sc.stop()

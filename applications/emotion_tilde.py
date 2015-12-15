@@ -1,12 +1,13 @@
 from __future__ import print_function
 
+import sys
 from pyspark import SparkContext
+from operator import add
 
 def predict(line):
-    fields = line.split()
+    fields = line.split('\t')
 
-    tweet_id = fields[0]
-    text = fields[9]
+    text = fields[10]
     npos = int(fields[-2])
     nneg = int(fields[-1])
 
@@ -15,7 +16,7 @@ def predict(line):
     return (emotion, 1 if '~' in text else 0)
 
 def analyse(path, outputPath):
-    lines = sc.textFile(sys.argv[1], use_unicode=False)
+    lines = sc.textFile(path, use_unicode=False)
 
     results = lines.map(predict).reduceByKey(add)
 
@@ -23,9 +24,12 @@ def analyse(path, outputPath):
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: emotion_tilde naive-data result–path")
+        print("Usage: emotion_tilde naive_data result_path")
         exit(-1)
 
     sc = SparkContext(appName = "emotion_tilde")
 
     analyse(sys.argv[1], sys.argv[2])
+
+    sc.stop()
+
