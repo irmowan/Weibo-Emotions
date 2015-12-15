@@ -12,7 +12,7 @@ def predict(line):
 
     emotion = (npos and not nneg and "Positive") or (not npos and nneg and "Negative") or "Ambivalent"
 
-    return (emotion, '~' in text)
+    return (emotion, 1 if '~' in text else 0)
 
 def analyse(path, outputPath):
     lines = sc.textFile(sys.argv[1], use_unicode=False)
