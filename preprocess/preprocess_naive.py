@@ -18,7 +18,10 @@ def count(line):
 
     fields = line.split('\t')
 
-    fields[-2] = fields[-2] or -2
+    if len(fields) < 11:
+        return ""
+
+    fields[-2] = fields[-2] or '-1'
 
     tweet = "".join(fields[5: -6]) 
 
@@ -28,10 +31,10 @@ def count(line):
     
     return " ".join(fields[0: 5] + fields[-6: -1] + fields[5: -6] + [str(c[0]), str(c[1])])
 
-def analyse(path, emotions, outputPath):
-    lines = sc.textFile(sys.argv[2], use_unicode=False)
+def analyse(path, outputPath):
+    lines = sc.textFile(path, use_unicode=False)
 
-    results = lines.map(count)
+    results = lines.map(count).filter(lambda s: s)
 
     results.saveAsTextFile(outputPath)
 
@@ -43,4 +46,4 @@ if __name__ == "__main__":
 
     emotions = load_emotions(sys.argv[1])
 
-    analyse(sys.argv[2], emotions, sys.argv[3])
+    analyse(sys.argv[2], sys.argv[3])
