@@ -1,8 +1,6 @@
 from __future__ import print_function
 
-import codecs
 import sys
-import subprocess
 from pyspark import SparkContext
 
 def load_emotions(path):
@@ -18,23 +16,21 @@ def load_emotions(path):
 def count(line):
     c = [0, 0]
 
-    # bug here, but does not affect this program
-    tweet = "".join(line.split()[5: -5]) 
+    fields = line.split('\t')
+
+    tweet = "".join(fields[5: -6]) 
 
     for keyword, emotion in emotions.iteritems():
         if keyword in tweet:
             c[emotion] += 1
-
-    emotion = (c[0] and not c[1] and "Positive") or (not c[0] and c[1] and "Negative") or "Ambivalent"
-
-    return "%s %d %d %s" % (tweet, c[0], c[1], emotion)
+    
+    return " ".join(fields[0: 5] + fields[-6:] + fields[5: -6] + [str(c[0]), str(c[1])])
 
 def analyse(path, emotions, outputPath):
     lines = sc.textFile(sys.argv[2], use_unicode=False)
 
     results = lines.map(count)
 
-    # chinese words in the output files are shown as \x343
     results.saveAsTextFile(outputPath)
 
 if __name__ == "__main__":
