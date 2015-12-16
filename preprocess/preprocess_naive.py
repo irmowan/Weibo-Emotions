@@ -23,13 +23,13 @@ def count(line):
 
     fields[-2] = fields[-2] or '-1'
 
-    tweet = "".join(fields[5: -6]) 
+    tweet = " ".join(fields[5: -6]) 
 
     for keyword, emotion in emotions.iteritems():
         if keyword in tweet:
             c[emotion] += 1
     
-    return " ".join(fields[0: 5] + fields[-6: -1] + fields[5: -6] + [str(c[0]), str(c[1])])
+    return "\t".join(fields[0: 5] + fields[-6: -1] + [tweet] + [str(c[0]), str(c[1])])
 
 def analyse(path, outputPath):
     lines = sc.textFile(path, use_unicode=False)
