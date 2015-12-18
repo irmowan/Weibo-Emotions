@@ -1,2 +1,14 @@
 data/tweets_sample.txt
 
+## For LaTeX
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.synctex.gz
+## for pdf
+*.pdf
+
