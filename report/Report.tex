@@ -74,7 +74,7 @@ $$
 
 图\ref{fig:emotion_time_1}反映了有明确情绪的微博和总微博数量之间的关系。没有明确情绪的微博由上述 emotion 为 0和±2的微博组成。图\ref{fig:emotion_time_2}反映了积极微博和消极微博数量上的关系，可以明显的看出，情感积极的微博总是占据大多数的。为了更好的体现微博整体情感的变化趋势，我们使用 {\it PN ratio} 来衡量整个微博的情感。
 $$PN~ratio = \frac{\text{\#positive weibo}}{\text{\#negative weibo}}$$
-图\ref{fig:emotion_time_3}反映了 {\it PN ratio} 与时间的关系。有意思的是，整体的图形与微博量-时间的图形非常相似，这也就意味着，在深夜的时候，消极微博占的比重更大。
+图\ref{fig:emotion_time_3}反映了 {\it PN ratio} 与时间的关系。有意思的是，整体的图形与微博量-时间的图形非常相似，这也就意味着，在深夜的时候，消极微博占的比重更大。全天来看，4时开始整体开始往积极方向发展，而到了15时之后，则开始往消极方向发展。
 
 \begin{figure}
 	\centering
@@ -108,6 +108,178 @@ $$PN~ratio = \frac{\text{\#positive weibo}}{\text{\#negative weibo}}$$
 	\caption{2012年日微博情绪波动。}
 	\label{fig:emotion_day}
 \end{figure}
+
+\subsection{微博情绪-性别}
+这一小节分析微博情绪在男女之中是否有所差别。从数据中看，积极微博的占比在男女性中不相上下，而女性的消极微博占比要多出约2个百分点。
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.45\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_gender_m}
+		\caption{男性}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_gender_f}
+		\caption{女性}
+	\end{subfigure}
+	\caption{各种微博情绪在不同性别人群里的分布。（图中蓝色代表积极情绪的微博，绿色代表无情绪，橙色代表消极情绪，剩余两类为有歧义的微博）}
+	\label{fig:emotion_gender}
+\end{figure}
+
+\subsection{微博情绪-身份}
+从图\ref{fig:emotion_identification}中蓝色部分（积极的微博）可以看出，最积极的是学校的微博，其次是企业和名人所发。原来预计政府应该在这一项中有最高的比重，但是可以看到，由于政府的微博有很大一部分被划分为无表情一类，推测可能的原因是政府使用的表情更偏向那些没有明显感情色彩的表情。另一方面，从消极占比来看，政府的消极微博占比则相较总体情况要少了很多，由此可以判断政府的微博还是比大部分的用户要更加积极的。除了政府，学校、名人、企业和媒体相对来说负面情绪要少一些，而负面情绪在微博会员这一类别中表现的更强烈。
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.3\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_all}
+		\caption{总体}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_ordinary}
+		\caption{普通用户}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_government}
+		\caption{政府}
+	\end{subfigure}
+	\\
+	\begin{subfigure}[b]{0.3\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_campus}
+		\caption{学校}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_celebrities}
+		\caption{名人}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_media}
+		\caption{媒体}
+	\end{subfigure}
+	\\
+	\begin{subfigure}[b]{0.3\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_enterprises}
+		\caption{企业}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_junior}
+		\caption{普通会员}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_senior}
+		\caption{高级会员}
+	\end{subfigure}
+	\caption{被转发过的微博的情绪分布。}
+	\label{fig:emotion_identification}
+\end{figure}
+
+
+\subsection{微博情绪-转发量}
+为了检验什么样的情绪更容易在微博上被传播，我们使用filter过滤出含有转发符号（“//”）的微博。从图\ref{fig:emotion_forward}中可以明显的比较出，积极情绪的微博更容易被转发。
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.45\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_all}
+		\caption{总体}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_forward}
+		\caption{被转发过的微博}
+	\end{subfigure}
+	\caption{被转发过的微博的情绪分布。}
+	\label{fig:emotion_forward}
+\end{figure}
+
+
+\subsection{微博情绪-波浪线}
+根据经验，人们在发布积极情绪的微博时，更容易加上波浪线（\~{}），比如“么么哒\~{}\~{}”、“好漂亮\~{}\~{}”。为了检验这一经验是否符合实际情况，我们对此进行了统计。如图\ref{fig:emotion_tilde}所示，数据显示，含有波浪线的微博积极情占比从60.3\%提高到了65.6\%，而消极情绪的占比降低了6.4\%，符合我们日常经验。
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.45\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_all}
+		\caption{总体}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\linewidth}
+		\centering
+		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_tilde}
+		\caption{含有波浪线的微博}
+	\end{subfigure}
+	\caption{含有波浪线的微博情绪分布情况。}
+	\label{fig:emotion_tilde}
+\end{figure}
+
+\subsection{微博情绪词典}
+\label{subsec:polar_dict}
+我们可以首先利用表情和表情畸形词典统计得到的每条微博的情绪，来生成一个描述单词的极性词典，具体做法如下：首先进行分词，这里使用了结巴开源库；之后计算每个词出现的次数和出现在积极微博中的次数，将两者相除，就可以得到一个 $[0, 1]$ 之间的值来衡量这个词的极性。
+$$\text{词word的积极程度}= \frac{\text{word出现在积极微博中的次数}}{\text{word出现在所有微博中的次数}}$$
+在这里，我们定义如果一个词大于0.6，那么它就是积极的，介于0.6和0.4之间的是无明显情绪的，小于0.4的是消极的。
+表\ref{tbl:polar_dict}列出了最后得到的一些结果。
+
+\begin{table}[]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\multicolumn{2}{|c|}{积极} & \multicolumn{2}{c|}{消极} & \multicolumn{2}{c|}{中性} \\ \hline
+词           & 积极度        & 词          & 积极度        & 词          & 积极度        \\ \hline
+新婚          & 0.87       & 他*的        & 0.20       & 楼盘         & 0.50       \\ \hline
+爱           & 0.89       & 艹          & 0.24       & 毕业生        & 0.50       \\ \hline
+天天开心        & 0.89       & 骗          & 0.39       & 高管         & 0.48       \\ \hline
+非常感谢        & 0.86       & MLGB       & 0.34       & 美国         & 0.53       \\ \hline
+好样          & 0.85       & 睡眠不足       & 0.29       & 组图         & 0.50       \\ \hline
+情人节         & 0.71       & 哭泣         & 0.34       & 研究所        & 0.58       \\ \hline
+\end{tabular}
+\caption{生成的微博情绪词典样例。}
+\label{tbl:polar_dict}
+\end{table}
+
+\subsection{表情的积极程度}
+数据集提供的表情仅用三种值来划分它的极性（积极、消极和无情绪），在此，我们进行了一些统计，得到了每个表情的积极程度。具体做法如下：首先对微博进行分词，分词方法同\ref{subsec:polar_dict}一节；之后使用\ref{subsec:polar_dict}一节得到的极性词典，来计算每一条微博的积极程度，用 $[-1, 1]$ 之间的实数来表示；最后，对每个表情计算其积极程度。
+使用下式来计算每一条微博的情绪：
+$$\text{微博的情绪} = \frac{\sum{\text{所有出现过的单词的积极程度}}}{\text{\#所有出现过的单词}}$$
+使用下式来计算每个表情的积极程度：
+$$\text{表情的积极程度} = \frac{\sum{\text{包含该单词的微博的情绪}}}{\text{\#包含该单词的微博}}$$
+
+表\ref{tbl:weighted_expreesions}展示了一部分结果。图\ref{fig:weighted_expressions_top5}是最积极和最消极的表情。
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.35\linewidth]{../result/charts/weighted_expressions_top5}
+	\caption{积极程度最高和最低的5个表情，第一行为最积极的表情，第二行为最消极的表情，从左至右程度依次递减。}
+	\label{fig:weighted_expressions_top5}
+\end{figure}
+
+\begin{table}[]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multicolumn{2}{|c|}{积极} & \multicolumn{2}{c|}{消极} \\ \hline
+表情            & 积极程度     & 表情          & 积极程度      \\ \hline
+{[}太开心{]}     & 0.887    & {[}白眼{]}    & -0.769    \\ \hline
+{[}圣诞袜{]}     & 0.905    & {[}哼{]}     & -0.748    \\ \hline
+{[}给力{]}      & 0.924    & {[}怒{]}     & -0.855    \\ \hline
+{[}来{]}       & 0.853    & {[}悲伤{]}    & -0.785    \\ \hline
+{[}礼物{]}      & 0.879    & {[}鄙视{]}    & -0.782    \\ \hline
+{[}可爱{]}      & 0.898    & {[}委屈{]}    & -0.710    \\ \hline
+\end{tabular}
+\caption{表情的积极程度样例}
+\label{tbl:weighted_expreesions}
+\end{table}
 
 \newpage
 \renewcommand\refname{参考文献}
