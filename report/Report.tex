@@ -1,5 +1,6 @@
 % TEX encoding = UTF-8 Unicode
-% Complied by LaTeX, not XeLaTeX
+% Compiled by LaTeX, not XeLaTeX
+% Compiled at least 2 times, for generating contents and figure reference.
 % if documents are needed, using BibTeX first after aux file generated.
 
 \documentclass[12pt, oneside]{article}   	
@@ -37,13 +38,15 @@
 
 \maketitle
 
-% \tableofcontents
+\tableofcontents
 
 \newpage
 
 \section{介绍}
 \subsection{数据集}
 \label{subsec:dataset}
+
+我们采用的是数据堂的数据集，涵盖了2012年全年的3 GB左右的新浪微博数据，以及一百多个新浪微博表情对应的二元标签。数据样例存放在data文件夹下。经统计，微博数据大约有1400多万条。该数据集是经过筛选的，几乎所有的微博均含有表情。
 
 \subsection{目标}
 利用\ref{subsec:dataset}一节介绍的含有表情的微博数据集，完成两部分工作。
@@ -55,7 +58,8 @@
 上述的工作均已完成，我们同时还针对其中的几个程序进行了性能分析。
 
 \subsection{分工}
-项目分工如表\ref{tbl:responsibilities}所示。
+
+由于我们一共有四名同学共同完成这个项目，需要进行适当的分工合作。项目分工的大体情况如表\ref{tbl:responsibilities}所示。
 
 \begin{table}[]
 \centering
@@ -63,8 +67,8 @@
 \hline
 姓名          & 分工                              \\ \hline
 Yuxin Chen  & 环境搭建、分布式预处理、基本应用、数据可视化、幻灯片、报告撰写 \\ \hline
-Yimu Wan    & 环境搭建、单机版预处理、基本应用、表情积极度、幻灯片      \\ \hline
-Yong Xu     & 微博分词、极性词典构建                     \\ \hline
+Yimu Wan    & 环境搭建、单机版预处理、基本应用、表情积极度、幻灯片、报告撰写     \\ \hline
+Yong Xu     & 微博分词、极性词典构建、性能测试                     \\ \hline
 Shumin Wang & 基本应用                            \\ \hline
 \end{tabular}
 \caption{项目分工}
@@ -81,6 +85,7 @@ Shumin Wang & 基本应用                            \\ \hline
 \begin{tabular}{|c|p{0.618\linewidth}|}
 \hline
 路径              & 说明                               \\ \hline
+./data	   &  数据样例			\\ \hline
 ./applications  & 本项目对微博数据集进行挖掘的所有代码，以及相对应部署的脚本。    \\ \hline
 ./preprocess    & 预处理的程序，包括了分词和统计积极与消极表情出现次数的两个程序。 \\ \hline
 ./report        & 用于存放本报告相关的文件                     \\ \hline
@@ -96,16 +101,18 @@ Shumin Wang & 基本应用                            \\ \hline
 \subsection{团队合作}
 我们小组采用 {\it Google Docs} 协同编写文档，文档的内容包括各个程序间接口的定义、任务的安排等。代码的管理通过 {\it Git} 和 {\it GitHub} 来完成。此外，我们还通过微信群讨论以及线下开会的方式进行了沟通和交流。
 
-\subsection{环境配置}
-在与王耀辉组交流之后，我们决定使用 Ambari 进行集中部署。我们配置了以下组件：{\it HDFS, YARN+MapReduce2, ZooKeeper, Ambari  Matrics, Hbase, Spark}。 {\it HDFS} 为数据存储提供了支撑， {\it YARN+MapReduce2} 提供资源管理和MapReduce的支持。 {\it ZooKeeper} 解决分布式应用的数据管理问题。 {\it Abari Matrics} 提供集群状态的检测， {\it Hbase} 支撑了前者的数据存储。 {\it Spark} 是我们主要直接使用的分布式框架。
+\subsection{环境搭建与配置}
+在与王耀辉组交流之后，我们决定使用 Ambari 进行集成式部署。我们配置了以下组件：{\it HDFS, YARN+MapReduce2, ZooKeeper, Ambari  Matrics, Hbase, Spark}。 {\it HDFS} 为数据存储提供了支撑， {\it YARN+MapReduce2} 提供资源管理和MapReduce的支持。 {\it ZooKeeper} 解决分布式应用的数据管理问题。 {\it Ambari Matrics} 提供集群状态的检测， {\it Hbase} 支撑了前者的数据存储。 {\it Spark} 是我们主要直接使用的分布式框架。
 
-以下使我们在环境配置过程中遇到的一些问题：
+以下使我们在环境配置过程中遇到的一些问题，以及相应的解决方案。
+
 \begin{itemize}
 	\item 搭建 HTTP 代理。由于集群所在的环境同学校实验室，因此上外网需要使用学号登陆，而每个学号只能登陆3台主机。此外，学校实验室的内网上国外网站下载安装包时很容易受到人为的干扰。为了解决这两个问题，我们在自己实验室的电脑上提前使用 Squid3 搭建了 HTTP 代理，并在集群上配置以便更高效的搭建并方便日后的使用。
+	\item 设置host。首先要给每台机器设置合理的主机名，此处统一使用Weibo[1-6].Hadoop作为集群各机器的主机名。然后配置相关的hosts方便通讯(Ambari会自动给机器配置)，在自己的电脑上也最好配置一下，这样在后面浏览文件目录、查看日志时会很方便。
 	\item 配置机器间的 SSH 。配置后机器间通过公钥私钥的配对就可以验证身份，而无需在输入密码，这使得像 Ambari 这样的工具得以施展拳脚。
 	\item 关掉 iptables 。根据 Ambari 的提示而关闭，目的是为了避免防火墙阻碍集群内机器间的通讯。
-	\item 同步时间。 Hadoop 集群对时间有一定的要求，机器间的时间间隔不能过大。分配到集群之后我们发现集群之间的时间相差最多已经达到了三十分钟，因此我们搭建了一个 ntp 服务器，用它来为集群的机器进行同步。
-	\item 关掉原来在运行的程序。由于拿到的集群并不是全新的，所以之前留下的程序其实还在运转。这时候端口已经被占用，导致新安装的程序没有办法启动，最后就会导致安装失败，因此我们在发现这个问题之后先手动关闭了之前的程序。
+	\item 同步时间。 Hadoop 集群对时间的同步性有一定的要求，机器间的时间间隔不能过大，这会影响到相互之间的通信。分配到集群之后我们发现集群各机器之间的时间相差最多已经达到了三十分钟，因此我们搭建了一个(Network Time Protocol,网络时间协议)服务器，用它来为集群的机器进行同步。
+	\item 关掉原来在运行的程序。由于拿到的集群并不是全新的，所以之前留下的程序其实还在运转。这时候端口已经被占用，导致新安装的程序没有办法启动，最后就会导致安装失败。Ambari在因此我们在发现这个问题之后先手动关闭了之前的程序。
 \end{itemize}
 
 \subsection{数据预处理}
@@ -283,7 +290,7 @@ $$PN~ratio = \frac{\text{\#positive weibo}}{\text{\#negative weibo}}$$
 		\includegraphics[trim = 1.5cm 0 1.5cm 0, clip = true, width=\textwidth]{../result/charts/emotion_identification_senior}
 		\caption{高级会员}
 	\end{subfigure}
-	\caption{被转发过的微博的情绪分布。}
+	\caption{不同类别用户的微博的情绪分布。}
 	\label{fig:emotion_identification}
 \end{figure}
 
@@ -309,7 +316,8 @@ $$PN~ratio = \frac{\text{\#positive weibo}}{\text{\#negative weibo}}$$
 
 
 \subsection{微博情绪-波浪线}
-根据经验，人们在发布积极情绪的微博时，更容易加上波浪线（\~{}），比如“么么哒\~{}\~{}”、“好漂亮\~{}\~{}”。为了检验这一经验是否符合实际情况，我们对此进行了统计。如图\ref{fig:emotion_tilde}所示，数据显示，含有波浪线的微博积极情占比从60.3\%提高到了65.6\%，而消极情绪的占比降低了6.4\%，符合我们日常经验。
+
+根据经验，人们在发布积极情绪的微博时，更容易加上波浪线（\~{}），比如“么么哒\~{}\~{}”、“好漂亮\~{}\~{}”等。为了检验这一经验是否符合实际情况，我们对此进行了统计。如图\ref{fig:emotion_tilde}所示，数据显示，含有波浪线的微博积极情占比从60.3\%提高到了65.6\%，而消极情绪的占比降低了6.4\%，符合我们日常经验。
 
 \begin{figure}
 	\centering
@@ -330,9 +338,9 @@ $$PN~ratio = \frac{\text{\#positive weibo}}{\text{\#negative weibo}}$$
 \subsection{微博情绪词典}
 \label{subsec:polar_dict}
 我们可以首先利用表情和表情畸形词典统计得到的每条微博的情绪，来生成一个描述单词的极性词典，具体做法如下：首先进行分词，这里使用了结巴开源库；之后计算每个词出现的次数和出现在积极微博中的次数，将两者相除，就可以得到一个 $[0, 1]$ 之间的值来衡量这个词的极性。
-$$\text{词word的积极程度}= \frac{\text{word出现在积极微博中的次数}}{\text{word出现在所有微博中的次数}}$$
-在这里，我们定义如果一个词大于0.6，那么它就是积极的，介于0.6和0.4之间的是无明显情绪的，小于0.4的是消极的。
-表\ref{tbl:polar_dict}列出了最后得到的一些结果。
+$$\text{词{\it word}的积极程度}= \frac{\text{{\it word}出现在积极微博中的次数}}{\text{{\it word}出现在所有微博中的次数}}$$
+在这里，我们定义如果一个词的积极程度大于0.6，那么就认为其是积极的，介于0.6和0.4之间的是无明显情绪的，小于0.4的是消极的。
+表\ref{tbl:polar_dict}列出了最后得到的一些结果，详细的结果保存在/result/emotion_dict.txt。
 
 \begin{table}[]
 \centering

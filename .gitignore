@@ -9,6 +9,8 @@ data/tweets_sample.txt
 *.out
 *.toc
 *.synctex.gz
+*.bbl
+*.blg
 ## for pdf
 *.pdf
 
