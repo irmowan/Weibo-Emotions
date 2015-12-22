@@ -42,6 +42,109 @@
 \newpage
 
 \section{介绍}
+\subsection{数据集}
+\label{subsec:dataset}
+
+\subsection{目标}
+利用\ref{subsec:dataset}一节介绍的含有表情的微博数据集，完成两部分工作。
+
+第一部分是对数据集的挖掘工作，分析微博量与时间、微博情绪与时间、微博情绪与日期、微博情绪与性别、微博情绪与身份、微博情绪与转发量、微博情绪与波浪线、微博情绪与扩散难易程度之间的关系。
+
+第二部分是生成我们自己的极性词典，并给每个表情定义一个积极程度。
+
+上述的工作均已完成，我们同时还针对其中的几个程序进行了性能分析。
+
+\subsection{分工}
+项目分工如表\ref{tbl:responsibilities}所示。
+
+\begin{table}[]
+\centering
+\begin{tabular}{|c|p{0.618\linewidth}|}
+\hline
+姓名          & 分工                              \\ \hline
+Yuxin Chen  & 环境搭建、分布式预处理、基本应用、数据可视化、幻灯片、报告撰写 \\ \hline
+Yimu Wan    & 环境搭建、单机版预处理、基本应用、表情积极度、幻灯片      \\ \hline
+Yong Xu     & 微博分词、极性词典构建                     \\ \hline
+Shumin Wang & 基本应用                            \\ \hline
+\end{tabular}
+\caption{项目分工}
+\label{tbl:responsibilities}
+\end{table}
+
+\subsection{源代码与相关材料}
+本项目的所有源代码、实验结果和报告相都已在 GitHub 上开源，请访问： {\it https://github.com/irmowan/weibo-emotions} 获取。
+此外，课堂展示所用的幻灯片已上传至 Google Docs ，请访问： {\it https://drive.google.com/file/d/0B6-7ExEnjWkuNmZ0dkd5MGNaVmM/view?usp=sharing} 获取。
+
+项目仓库的文件组织如表\ref{tbl:files_organization}所示。
+\begin{table}[]
+\centering
+\begin{tabular}{|c|p{0.618\linewidth}|}
+\hline
+路径              & 说明                               \\ \hline
+./applications  & 本项目对微博数据集进行挖掘的所有代码，以及相对应部署的脚本。    \\ \hline
+./preprocess    & 预处理的程序，包括了分词和统计积极与消极表情出现次数的两个程序。 \\ \hline
+./report        & 用于存放本报告相关的文件                     \\ \hline
+./result        & 存放所有的结果文件                        \\ \hline
+./result/charts & 包括所有绘制出来的图表，以及用于绘制图标的 Python 程序    \\ \hline
+./utilities     & 包括了3个实用工具，它们分别用来从 HDFS 中回收结果、给结果排序以及从符合条件的微博中抽样        \\ \hline
+\end{tabular}
+\caption{项目的文件组织}
+\label{tbl:files_organization}
+\end{table}
+
+\section{过程}
+\subsection{团队合作}
+我们小组采用 {\it Google Docs} 协同编写文档，文档的内容包括各个程序间接口的定义、任务的安排等。代码的管理通过 {\it Git} 和 {\it GitHub} 来完成。此外，我们还通过微信群讨论以及线下开会的方式进行了沟通和交流。
+
+\subsection{环境配置}
+在与王耀辉组交流之后，我们决定使用 Ambari 进行集中部署。我们配置了以下组件：{\it HDFS, YARN+MapReduce2, ZooKeeper, Ambari  Matrics, Hbase, Spark}。 {\it HDFS} 为数据存储提供了支撑， {\it YARN+MapReduce2} 提供资源管理和MapReduce的支持。 {\it ZooKeeper} 解决分布式应用的数据管理问题。 {\it Abari Matrics} 提供集群状态的检测， {\it Hbase} 支撑了前者的数据存储。 {\it Spark} 是我们主要直接使用的分布式框架。
+
+以下使我们在环境配置过程中遇到的一些问题：
+\begin{itemize}
+	\item 搭建 HTTP 代理。由于集群所在的环境同学校实验室，因此上外网需要使用学号登陆，而每个学号只能登陆3台主机。此外，学校实验室的内网上国外网站下载安装包时很容易受到人为的干扰。为了解决这两个问题，我们在自己实验室的电脑上提前使用 Squid3 搭建了 HTTP 代理，并在集群上配置以便更高效的搭建并方便日后的使用。
+	\item 配置机器间的 SSH 。配置后机器间通过公钥私钥的配对就可以验证身份，而无需在输入密码，这使得像 Ambari 这样的工具得以施展拳脚。
+	\item 关掉 iptables 。根据 Ambari 的提示而关闭，目的是为了避免防火墙阻碍集群内机器间的通讯。
+	\item 同步时间。 Hadoop 集群对时间有一定的要求，机器间的时间间隔不能过大。分配到集群之后我们发现集群之间的时间相差最多已经达到了三十分钟，因此我们搭建了一个 ntp 服务器，用它来为集群的机器进行同步。
+	\item 关掉原来在运行的程序。由于拿到的集群并不是全新的，所以之前留下的程序其实还在运转。这时候端口已经被占用，导致新安装的程序没有办法启动，最后就会导致安装失败，因此我们在发现这个问题之后先手动关闭了之前的程序。
+\end{itemize}
+
+\subsection{数据预处理}
+为了更好的完成协同工作，我们定义了如表\ref{tbl:interface}的接口。
+
+预处理有两个主要的分支，一个是统计带有情绪的表情数量的，另一个是对微博进行分词的。预处理的结果中，微博间由换行符隔开，相邻两个数据域则由制表符隔开。两个程序的数据域0-9定义相同，分词的程序中，域10内是由空格分隔的分词结果，而对于统计的程序，域10是由原始的微博内容组成，之后两个域则是其中出现的带有情绪的表情数量。两个分支很好地解决了开发进度的问题，使得不依赖分词结果的程序能够先完成。
+
+
+\begin{table}[]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+0    & 1    & 2   & 3    & 4      & 5    & 6   \\ \hline
+微博id & 用户id & 时间戳 & 评论数  & 转发数    & 性别   & 关注数 \\ \hline
+7    & 8    & 9   & 10   & -2     & -1   &     \\ \hline
+粉丝数  & 互相关注 & 身份  & 微博内容 & \#积极表情 & \#消极 &     \\ \hline
+\end{tabular}
+\caption{数据接口}
+\label{tbl:interface}
+\end{table}
+
+\subsection{开发}
+开发中主要调用到了 Spark 中的 {\it map(), reduce(), flatMap()} 等方法来 MapReduce 操作，使用 {\it filter()} 来过滤无关信息，使用 {\it saveAsTextFile()} 来保存结果，使用 {\it collect(), sample()} 等方法来手机结果。此外，还使用到了 {\it leftOuterJoin()} 等函数，在此不再一一列举。
+
+我们在开发过程中遇到的一些问题：
+\begin{itemize}
+	\item Spark 默认不支持覆盖写入数据，所以在每一次写入之前应该先删除此前的结果。
+	\item HDFS 中，删除了结果之后，数据默认仅是移动到 .Trash 文件夹下，如果不手动清除，一段时间之后就会占用大量存储空间。
+	\item Hadoop 的状态显示并不准确，经常是状态显示成功但是实际上程序运行到一半已经崩溃了，这时候就需要去确认日志，日志在这里是最可信的。
+	\item Python 环境下 Spark 在序列化一个含有中文的元组（ tuple ）的时候，没有办法正确的显示，需要提前手动序列化。
+\end{itemize}
+
+\subsection{部署}
+我们为每一个程序编写了部署的脚本，并首先在小数据上测试，测试通过后再进一步部署到整个集群上，大大提高了开发效率。
+
+\subsection{数据可视化}
+数据可视化使用 {\it iPython} 配合 {\it matplotlib} 来完成，所有相关的代码均存放于 {\it ./result/charts} 中。
+
+\newpage
 
 \section{结果}
 \subsection{微博量-时间}
@@ -59,7 +162,7 @@
 
 \subsection{微博情绪-时间}
 \label{subsec:emotion_time}
-在这一节中我们试图通过统计来揭示微博情绪随时间的变化情况。程序实现中，map和reduce操作在\ref{subsec:weibo_time}节中已经介绍，这里补充说明 {\it(HH:MM, emotion)} 的 key-value pair 中 emotion 的计算方法。计算方法如下：
+在这一节中我们试图通过统计来揭示微博情绪随时间的变化情况。程序实现中， map 和 reduce 操作在\ref{subsec:weibo_time}节中已经介绍，这里补充说明 {\it(HH:MM, emotion)} 的 key-value pair 中 emotion 的计算方法。计算方法如下：
 $$
 emotion = 
 \begin{cases}
@@ -237,7 +340,7 @@ $$\text{词word的积极程度}= \frac{\text{word出现在积极微博中的次�
 \hline
 \multicolumn{2}{|c|}{积极} & \multicolumn{2}{c|}{消极} & \multicolumn{2}{c|}{中性} \\ \hline
 词           & 积极度        & 词          & 积极度        & 词          & 积极度        \\ \hline
-新婚          & 0.87       & 他*的        & 0.20       & 楼盘         & 0.50       \\ \hline
+新婚          & 0.87       & 他妈的        & 0.20       & 楼盘         & 0.50       \\ \hline
 爱           & 0.89       & 艹          & 0.24       & 毕业生        & 0.50       \\ \hline
 天天开心        & 0.89       & 骗          & 0.39       & 高管         & 0.48       \\ \hline
 非常感谢        & 0.86       & MLGB       & 0.34       & 美国         & 0.53       \\ \hline
@@ -280,6 +383,13 @@ $$\text{表情的积极程度} = \frac{\sum{\text{包含该单词的微博的情
 \caption{表情的积极程度样例}
 \label{tbl:weighted_expreesions}
 \end{table}
+
+\subsection{性能对比}
+性能对比分为两部分，分别针对单机与分布环境下的效率，以及分布式环境下大小数据之间的关系。
+
+第一部分我们使用分词预处理的程序作为测试对象。测试时，首先将分词程序部署到集群上，分配6个执行器（ executor ）运行；之后直接在集群的其中的一台机子上运行相同的程序 （仅1个执行器）。结果显示，运行在分布式环境上的程序耗时 {\it 21m31s}，而运行在单机上的程序耗时 {\it 1h48m19s}。可以看到，分布式环境上的程序性能有明显的提升。但是，值得注意的是，在分布式环境下使用了6个执行器的程序并没有达到6倍的性能提升，这可能是由于网络延迟、任务调度和数据管理消耗了一些额外资源造成的。为了研究分布式程序额外资源的消耗，我们进行了第二部分的对比。
+
+第二部分的对比我们使用计算表情积极程度的程序作为测试对象。两次测试均使用相同的配置部署，不同的是使用的数据集大小。第一个程序输入小的数据集，大小为原始数据集的 $\frac{1}{20}$ ，第二个程序输入原始大小的数据集。第一个程序耗时 {\it 3m46s}，第二个程序耗时 {\it 53m22s}。第二个程序要比第一个程序运行时间的20倍来得少，这种关系说明有一些调度管理的任务所消耗的时间要比数据集的增长来的缓慢。
 
 \newpage
 \renewcommand\refname{参考文献}
