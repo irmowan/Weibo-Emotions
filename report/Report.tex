@@ -5,7 +5,7 @@
 
 \documentclass[12pt, oneside]{article}   	
 \usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
-\geometry{a4paper}                   		% letterpaper or a4paper or a5paper or ... 
+\geometry{a4paper}                   		% letterpaper or a4paper or a5paper or ...
 \usepackage{graphicx}				% Use pdf, png, jpg ...
 \usepackage{caption}
 \usepackage{subcaption}
@@ -25,10 +25,10 @@
 	\texttt{13307130xxx}
 	\and
 	Yong Xu\\
-	\texttt{12307130xxx}
+	\texttt{12307130268}
 	\and
 	Shumin Wang\\
-	\texttt{12307130xxx}
+	\texttt{12307130359}
 }
 \date{\today}
 
@@ -70,8 +70,8 @@
 姓名          & 分工                              \\ \hline
 Yuxin Chen  & 环境搭建、分布式预处理、基本应用、数据可视化、幻灯片、报告撰写 \\ \hline
 Yimu Wan    & 环境搭建、单机版预处理、基本应用、表情积极度、幻灯片、报告撰写     \\ \hline
-Yong Xu     & 微博分词、极性词典构建、性能测试                     \\ \hline
-Shumin Wang & 基本应用                            \\ \hline
+Yong Xu     & 微博分词、极性词典构建、报告撰写                   \\ \hline
+Shumin Wang & 基本应用、性能测试                         \\ \hline
 \end{tabular}
 \caption{项目分工}
 \label{tbl:responsibilities}
@@ -158,7 +158,7 @@ Shumin Wang & 基本应用                            \\ \hline
 \section{结果}
 \subsection{微博量-时间}
 \label{subsec:weibo_time}
-在这一小节中我们统计了微博量与时间的关系。程序实现中，首先将每一条微博 map 为 {\it(HH:MM, emotion)} 的 key-value pair，其中 HH:MM 表示小时和分钟数， emotion 表示情绪（这里复用了\ref{subsec:emotion_time}节中的程序）。再对 map 好的 key-value pair 根据键的值来做 reduce 。 
+在这一小节中我们统计了微博量与时间的关系。程序实现中，首先将每一条微博 map 为 {\it(HH:MM, emotion)} 的 key-value pair，其中 HH:MM 表示小时和分钟数， emotion 表示情绪（这里复用了\ref{subsec:emotion_time}节中的程序）。再对 map 好的 key-value pair 根据键的值来做 reduce 。
 
 图\ref{fig:weibo_time}展示了以小时为间隔的统计结果。数据显示，9时-24时微博量相对稳定，高峰出现在22时-23时这一区间内。23时之后微博量开始下降，低谷在5时-6时出现，呈现一个明显的U形，符合大部分人的作息习惯。
 
@@ -173,7 +173,7 @@ Shumin Wang & 基本应用                            \\ \hline
 \label{subsec:emotion_time}
 在这一节中我们试图通过统计来揭示微博情绪随时间的变化情况。程序实现中， map 和 reduce 操作在\ref{subsec:weibo_time}节中已经介绍，这里补充说明 {\it(HH:MM, emotion)} 的 key-value pair 中 emotion 的计算方法。计算方法如下：
 $$
-emotion = 
+emotion =
 \begin{cases}
 1 & npos > 0~and~nneg = 0 \\
 -1 & npos = 0~and~nneg > 0 \\
@@ -410,8 +410,7 @@ $$ Z_{X_t} = \frac{X_t - \bar{x}(X_{t \pm k})}{\sigma(X_{t \pm k})}$$
 \end{figure}
 
 \subsection{性能对比}
-性能对比分为两部分，分别针对单机与分布环境下的效率，以及分布式环境下大小数据之间的关系。
-
+本次性能对比主要是对比单机程序与分布式程序在不同数据集下的效率。
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\linewidth]{../result/charts/performance}
@@ -419,17 +418,14 @@ $$ Z_{X_t} = \frac{X_t - \bar{x}(X_{t \pm k})}{\sigma(X_{t \pm k})}$$
 	\label{fig:performance}
 \end{figure}
 
-第一部分我们使用分词预处理的程序作为测试对象。测试时，首先将分词程序部署到集群上，分配6个执行器（ executor ）运行；之后直接在集群的其中的一台机子上运行相同的程序 （仅1个执行器）。结果显示，运行在分布式环境上的程序耗时 {\it 21m31s}，而运行在单机上的程序耗时 {\it 1h48m19s}。可以看到，分布式环境上的程序性能有明显的提升。但是，值得注意的是，在分布式环境下使用了6个执行器的程序并没有达到6倍的性能提升，这可能是由于网络延迟、任务调度和数据管理消耗了一些额外资源造成的。为了研究分布式程序额外资源的消耗，我们进行了第二部分的对比。
-单机版只完成了77\%的任务，
-
-第二部分的对比我们使用对微博情绪分类的程序作为测试对象。目的是对比分布式程序和单机程序在不同数据集大小下的表现。单机程序在服务器上单机运行，分布式程序在6个和单机服务器配置相同的服务器上运行。两个程序运行时间随数据集增长如图所示。
+本次性能对比我们使用对微博情绪分类的程序作为测试对象。目的是对比分布式程序和单机程序在不同数据集大小下的表现。单机程序在服务器上单机运行，分布式程序在6个和单机服务器配置相同的服务器上运行。两个程序运行时间随数据集增长如图所示。
 从图中我们可以看出，
 1.对于分布式程序，无论数据集多大，初期的任务调度，集群间机器通信，任务分配都花了一定的时间，差不多是28s
 2.对于单机程序，运行时间和数据集的大小基本成线性增长。（图中我们对横轴和纵轴都取了log），单机程序是用python写的，没有写多线程，因此该脚本是以单线程运行的，因此所耗时间应该是和数据大小成线性增长的，这符合我们的预期。
 3.从图上的对比我们可以看出数据条目数超过1000000条时，分布式程序所耗时间就快要小于单机程序了，这里分布式计算的优势就已经体现出来了。
 4.对于分布式程序，他的真正进行mapreduce计算的执行时间并不是随着数据量的大小成正比的。这有可能是因为我们executor的数量并不是固定的。对于大数据，会有更多的executor来执行我们所需的操作。分布式的优势也会更加明显。
 5.对于分布式程序，对于小数据的情况，实际的运行的时间并不是非常稳定，两次相同的任务时间差可能会有十几秒。相比于单机程序，分布式程序仍然具有无法匹敌的速度。
-总的来说，对于大数据文本处理，spark具有很大的优势。值得在生产环境中实践和使用。
+总的来说，对于大数据文本处理，spark具有很大的优势，仅仅是它的map功能就可以解决大部分可以并行的文本处理操作，比较推荐在生产环境中实践和使用。
 
 \newpage
 \renewcommand\refname{参考文献}
