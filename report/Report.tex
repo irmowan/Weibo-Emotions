@@ -16,19 +16,15 @@
 \usepackage{amsmath}				% Math package, like align
 \usepackage{bbm}					% use indicator function in math
 
-\title{微博情绪分析}
+\title{微博情绪分析 项目报告}
 \author{
 	Yuxin Chen\\
-	\texttt{13307130xxx}
 	\and
 	Yimu Wan\\
-	\texttt{13307130xxx}
 	\and
 	Yong Xu\\
-	\texttt{12307130268}
 	\and
 	Shumin Wang\\
-	\texttt{12307130359}
 }
 \date{\today}
 
@@ -43,23 +39,27 @@
 \newpage
 
 \section{介绍}
+
 \subsection{数据集}
 \label{subsec:dataset}
-数据集含有两个文件，一个是人工标注的每个表情对应的情绪分类，另一个是抓取的微博。
-微博使用新浪微博API抓取，来此137,981名用户发表在2012年的微博。数据提供的信息包括微博id，用户id，时间戳，评论数，转发数，微博内容，用户性别，用户类别，用户粉丝数，用户关注人数，用户互相关注人数。
+我们采用的是数据堂的数据集，涵盖了2012年全年的3 GB左右的新浪微博数据。
+数据集含有两个文件，一个是人工标注的每个表情对应的情绪分类，共115个表情，另一个则是抓取的微博。
+微博使用新浪微博API抓取，为用户发表在2012年的137,981条微博。数据提供的信息包括微博id，用户id，时间戳，评论数，转发数，微博内容，用户性别，用户类别，用户粉丝数，用户关注人数，用户互相关注人数。
 
-我们采用的是数据堂的数据集，涵盖了2012年全年的3 GB左右的新浪微博数据，以及一百多个新浪微博表情对应的二元标签。数据样例存放在data文件夹下。经统计，微博数据大约有1400多万条。该数据集是经过筛选的，几乎所有的微博均含有表情。
 
-\subsection{目标}
+\subsection{项目目标}
+
+项目的主题是微博情绪分析，整个项目整体比较发散我们利用手头的数据，进行一些有意思的数据统计和挖掘操作。
+
 利用\ref{subsec:dataset}一节介绍的含有表情的微博数据集，完成两部分工作。
 
 第一部分是对数据集的挖掘工作，分析微博量与时间、微博情绪与时间、微博情绪与日期、微博情绪与性别、微博情绪与身份、微博情绪与转发量、微博情绪与波浪线、微博情绪与扩散难易程度之间的关系。此外我们还期望能够分析微博和股票价格之间的关系。
 
 第二部分是生成我们自己的极性词典，并给每个表情定义一个积极程度。
 
-上述的工作均已完成，我们同时还针对其中的几个程序进行了性能分析。
+上述的工作均已完成，我们同时还针对其中的几个程序进行了性能分析，以体现分布式处理在项目中的应用。
 
-\subsection{分工}
+\subsection{分工与合作}
 
 由于我们一共有四名同学共同完成这个项目，需要进行适当的分工合作。项目分工的大体情况如表\ref{tbl:responsibilities}所示。
 
@@ -77,11 +77,14 @@ Shumin Wang & 基本应用、性能测试                         \\ \hline
 \label{tbl:responsibilities}
 \end{table}
 
+我们小组采用 {\it Google Docs} 协同编写文档，文档的内容包括各个程序间接口的定义、任务的安排等。代码的管理通过 {\it Git} 和 {\it GitHub} 来完成。此外，我们还通过微信群讨论以及线下开会的方式进行了沟通和交流。
+
 \subsection{源代码与相关材料}
 本项目的所有源代码、实验结果和报告相都已在 GitHub 上开源，请访问： {\it https://github.com/irmowan/weibo-emotions} 获取。
-此外，课堂展示所用的幻灯片已上传至 Google Docs ，请访问： {\it https://drive.google.com/file/d/0B6-7ExEnjWkuNmZ0dkd5MGNaVmM/view?usp=sharing} 获取。
+此外，课堂展示所用的幻灯片已上传至 Google Docs ，请访问： {\it https://drive.google.com/file/d/0B6-7ExEnjWkuSkp2Rm44UWtla0k/view?usp=sharing} 获取。
 
 项目仓库的文件组织如表\ref{tbl:files_organization}所示。
+
 \begin{table}[]
 \centering
 \begin{tabular}{|c|p{0.618\linewidth}|}
@@ -99,9 +102,7 @@ Shumin Wang & 基本应用、性能测试                         \\ \hline
 \label{tbl:files_organization}
 \end{table}
 
-\section{过程}
-\subsection{团队合作}
-我们小组采用 {\it Google Docs} 协同编写文档，文档的内容包括各个程序间接口的定义、任务的安排等。代码的管理通过 {\it Git} 和 {\it GitHub} 来完成。此外，我们还通过微信群讨论以及线下开会的方式进行了沟通和交流。
+\section{开发过程}
 
 \subsection{环境搭建与配置}
 在与王耀辉组交流之后，我们决定使用 Ambari 进行集成式部署。我们配置了以下组件：{\it HDFS, YARN+MapReduce2, ZooKeeper, Ambari  Matrics, Hbase, Spark}。 {\it HDFS} 为数据存储提供了支撑， {\it YARN+MapReduce2} 提供资源管理和MapReduce的支持。 {\it ZooKeeper} 解决分布式应用的数据管理问题。 {\it Ambari Matrics} 提供集群状态的检测， {\it Hbase} 支撑了前者的数据存储。 {\it Spark} 是我们主要直接使用的分布式框架。
@@ -157,7 +158,7 @@ Shumin Wang & 基本应用、性能测试                         \\ \hline
 
 \newpage
 
-\section{结果}
+\section{分析结果及展示}
 \subsection{微博量-时间}
 \label{subsec:weibo_time}
 在这一小节中我们统计了微博量与时间的关系。程序实现中，首先将每一条微博 map 为 {\it(HH:MM, emotion)} 的 key-value pair，其中 HH:MM 表示小时和分钟数， emotion 表示情绪（这里复用了\ref{subsec:emotion_time}节中的程序）。再对 map 好的 key-value pair 根据键的值来做 reduce 。
@@ -174,7 +175,8 @@ Shumin Wang & 基本应用、性能测试                         \\ \hline
 \subsection{微博情绪-时间}
 \label{subsec:emotion_time}
 在这一节中我们试图通过统计来揭示微博情绪随时间的变化情况。程序实现中， map 和 reduce 操作在\ref{subsec:weibo_time}节中已经介绍，这里补充说明 {\it(HH:MM, emotion)} 的 key-value pair 中 emotion 的计算方法。计算方法如下：
-$$
+
+\[
 emotion =
 \begin{cases}
 1 & npos > 0~and~nneg = 0 \\
@@ -183,7 +185,8 @@ emotion =
 -2 & npos > 0~and~nneg > npos \\
 0 & \text{otherwise}
 \end{cases}
-$$
+\]
+
 公式中的 {\it npos, npeg} 为预处理后统计出来的两个数值，代表微博中包含的正负表情个数。 公式的结果中，1和-1代表这条微博具有明显的情绪倾向，0代表微博中不包含含有情绪的表情（或者表情不在数据集的情感词典中出现），2和-2代表这条微博的情绪有歧义，但更偏向积极或更偏向消极。
 
 图\ref{fig:emotion_time_1}反映了有明确情绪的微博和总微博数量之间的关系。没有明确情绪的微博由上述 emotion 为 0和±2的微博组成。图\ref{fig:emotion_time_2}反映了积极微博和消极微博数量上的关系，可以明显的看出，情感积极的微博总是占据大多数的。为了更好的体现微博整体情感的变化趋势，我们使用 {\it PN ratio} 来衡量整个微博的情感。
@@ -225,7 +228,9 @@ $$PN~ratio = \frac{\text{\#positive weibo}}{\text{\#negative weibo}}$$
 \end{figure}
 
 \subsection{微博情绪-性别}
-这一小节分析微博情绪在男女之中是否有所差别。从数据中看，积极微博的占比在男女性中不相上下，而女性的消极微博占比要多出约2个百分点。
+这一小节分析微博情绪在男女之中是否明显的差别。
+
+从数据中看，积极微博的占比在男女性中不相上下，而女性的消极微博占比要多出约2个百分点。
 
 \begin{figure}
 	\centering
@@ -301,7 +306,7 @@ $$PN~ratio = \frac{\text{\#positive weibo}}{\text{\#negative weibo}}$$
 
 
 \subsection{微博情绪-转发量}
-为了检验什么样的情绪更容易在微博上被传播，我们使用filter过滤出含有转发符号（“//”）的微博。从图\ref{fig:emotion_forward}中可以明显的比较出，积极情绪的微博更容易被转发。
+为了检验什么样的情绪更容易在微博上被传播，我们过滤出含有转发符号（“//”）的微博。从图\ref{fig:emotion_forward}中可以明显的比较出，积极情绪的微博更容易被转发。
 
 \begin{figure}
 	\centering
@@ -342,10 +347,12 @@ $$PN~ratio = \frac{\text{\#positive weibo}}{\text{\#negative weibo}}$$
 
 \subsection{微博情绪词典}
 \label{subsec:polar_dict}
-我们可以首先利用表情和表情畸形词典统计得到的每条微博的情绪，来生成一个描述单词的极性词典，具体做法如下：首先进行分词，这里使用了结巴开源库；之后计算每个词出现的次数和出现在积极微博中的次数，将两者相除，就可以得到一个 $[0, 1]$ 之间的值来衡量这个词的极性。
-$$\text{词{\it word}的积极程度}= \frac{\text{{\it word}出现在积极微博中的次数}}{\text{{\it word}出现在所有微博中的次数}}$$
+我们可以首先利用表情和表情极性词典统计得到的每条微博的情绪，来生成一个描述单词的极性词典，具体做法如下：首先进行分词，这里使用了结巴开源库；之后计算每个词出现的次数和出现在积极微博中的次数，将两者相除，就可以得到一个 $[0, 1]$ 之间的值来衡量这个词的极性。
+\[
+\text{词{\it word}的积极程度}= \frac{\text{{\it word}出现在积极微博中的次数}}{\text{{\it word}出现在所有微博中的次数}}
+\]
 在这里，我们定义如果一个词的积极程度大于0.6，那么就认为其是积极的，介于0.6和0.4之间的是无明显情绪的，小于0.4的是消极的。
-表\ref{tbl:polar_dict}列出了最后得到的一些结果，详细的结果保存在/result/emotion_dict.txt。
+表\ref{tbl:polar_dict}列出了最后得到的一些结果。%，详细的结果保存在{\it ../result/emotion_dict}。
 
 \begin{table}[]
 \centering
@@ -397,6 +404,8 @@ $$\text{表情的积极程度} = \frac{\sum{\text{包含该单词的微博的情
 \label{tbl:weighted_expreesions}
 \end{table}
 
+对于这样的结果，我们还能进一步进行迭代，根据新得到的表情权重，再次给微博打上新的标签，此时一条微博不再像原来那样只使用二元的情绪分类，而可以像表情积极程度一样，使用实数化的积极程度。这样，可以多次进行迭代，至微博情绪和表情情绪都基本收敛，能够得到更加准确的结果。
+
 \subsection{微博情绪与股市价格}
 我们将\ref{subsec:emotion_date}一节提到的 {\it PN ratio} 和 上证指数进行比较。如图\ref{fig:emotion_stock}所示，红色为相邻两个交易日股市价格之差对应的 {\it Z-scores}，蓝色为相邻两日微博情绪之差对应的 {\it Z-scores}。 {\it Z-scores}的定义如下：
 $$ Z_{X_t} = \frac{X_t - \bar{x}(X_{t \pm k})}{\sigma(X_{t \pm k})}$$
@@ -411,8 +420,15 @@ $$ Z_{X_t} = \frac{X_t - \bar{x}(X_{t \pm k})}{\sigma(X_{t \pm k})}$$
 	\label{fig:emotion_stock}
 \end{figure}
 
-\subsection{性能对比}
+\section{性能对比}
 本次性能对比主要是对比单机程序与分布式程序在不同数据集下的效率。
+
+本次性能对比我们使用对微博情绪分类的程序作为测试对象。目的是对比分布式程序和单机程序在不同数据集大小下的表现。
+
+其中，单机程序在服务器上单机运行，分布式程序在6个和单机服务器配置相同的服务器上运行。
+
+两个程序运行时间随数据集增长如图\ref{fig:performance}所示，从图中我们可以看出：
+
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\linewidth]{../result/charts/performance}
@@ -420,16 +436,24 @@ $$ Z_{X_t} = \frac{X_t - \bar{x}(X_{t \pm k})}{\sigma(X_{t \pm k})}$$
 	\label{fig:performance}
 \end{figure}
 
-本次性能对比我们使用对微博情绪分类的程序作为测试对象。目的是对比分布式程序和单机程序在不同数据集大小下的表现。单机程序在服务器上单机运行，分布式程序在6个和单机服务器配置相同的服务器上运行。两个程序运行时间随数据集增长如图所示。
-从图中我们可以看出，
-1.对于分布式程序，无论数据集多大，初期的任务调度，集群间机器通信，任务分配都花了一定的时间，差不多是28s
-2.对于单机程序，运行时间和数据集的大小基本成线性增长。（图中我们对横轴和纵轴都取了log），单机程序是用python写的，没有写多线程，因此该脚本是以单线程运行的，因此所耗时间应该是和数据大小成线性增长的，这符合我们的预期。
-3.从图上的对比我们可以看出数据条目数超过1000000条时，分布式程序所耗时间就快要小于单机程序了，这里分布式计算的优势就已经体现出来了。
-4.对于分布式程序，他的真正进行mapreduce计算的执行时间并不是随着数据量的大小成正比的。这有可能是因为我们executor的数量并不是固定的。对于大数据，会有更多的executor来执行我们所需的操作。分布式的优势也会更加明显。
-5.对于分布式程序，对于小数据的情况，实际的运行的时间并不是非常稳定，两次相同的任务时间差可能会有十几秒。相比于单机程序，分布式程序仍然具有无法匹敌的速度。
-总的来说，对于大数据文本处理，spark具有很大的优势，仅仅是它的map功能就可以解决大部分可以并行的文本处理操作，比较推荐在生产环境中实践和使用。
+\begin{enumerate}
+	\item 对于分布式程序，无论数据集多大，初期的任务调度，集群间机器通信，任务分配都花了一定的时间，差不多是28s
+	\item 对于单机程序，运行时间和数据集的大小基本成线性增长。（图中我们对横轴和纵轴都取了log），单机程序是用python写的，没有写多线程，因此该脚本是以单线程运行的，因此所耗时间应该是和数据大小成线性增长的，这符合我们的预期。
+	\item 从图上的对比我们可以看出数据条目数超过1000000条时，分布式程序所耗时间就快要小于单机程序了，这里分布式计算的优势就已经体现出来了。
+	\item 对于分布式程序，他的真正进行mapreduce计算的执行时间并不是随着数据量的大小成正比的。这有可能是因为我们executor的数量并不是固定的。对于大数据，会有更多的executor来执行我们所需的操作。分布式的优势也会更加明显。
+	\item 对于分布式程序，对于小数据的情况，实际的运行的时间并不是非常稳定，两次相同的任务时间差可能会有十几秒。相比于单机程序，分布式程序仍然具有无法匹敌的速度。
+总的来说，对于大数据文本处理，Spark具有很大的优势，仅仅是它的map功能就可以解决大部分可以并行的文本处理操作，比较推荐在生产环境中实践和使用。
+\end{enumerate}
 
-\newpage
+\section{总结}
+这个项目由四人合作，其中大家基本都是第一次使用Spark分布式环境处理分析数据。总计大约花了两周左右的时间，一周部署和熟悉环境，一周撰写源代码，分析数据。
+
+从开始的部署环境摸不着头脑，然后一个个坑踩过来，一个个error的解决让大家对分布式环境的机理更加熟悉。再往后熟悉集群上的各类操作，使用Python脚本写代码，Python作为脚本语言的便捷性也体现得非常好，不用做特别的环境配置，就可以直接使用。
+
+项目也体现了大数据分析的核心思想。虽然3 G的文本数据不算非常大，但是由于极性词典的使用，有些应用的算法复杂度也达到了O(MN)的级别，需要思考一定程度的优化(例如根据分词后的词语匹配词典而不应该遍历词典匹配微博中的词)。有些程序随着Part数的变多，时间也在增长，但增长又不是简单的线性关系，这在性能对比部分有所说明。
+
+通过这个课程项目，我们接触了较大规模的数据，了解了分布式开发工具的大致原理和基本使用，在分布式环境下做了一些基于MapReduce的数据处理，得到了不少有意思的结果，总体上收获很多。
+
 \renewcommand\refname{参考文献}
 \bibliographystyle{plain}
 \bibliography{Report}
