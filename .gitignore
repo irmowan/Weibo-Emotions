@@ -11,6 +11,4 @@ data/tweets_sample.txt
 *.synctex.gz
 *.bbl
 *.blg
-## for pdf
-*.pdf
 
