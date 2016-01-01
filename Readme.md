@@ -1,5 +1,7 @@
 # Weibo-Emotions
 
+GitHub website: [Weibo-Emotions](https://github.com/irmowan/Weibo-Emotions)
+
 This is a course project of Big Data Analysis.
 
 ### Tools & Environment
